@@ -1,0 +1,19 @@
+sudo: required ##super user permission
+services:
+  -docker
+before_install:
+  - docker build -t queengineer/react-test -f ./client/Dockerfile.dev ./client #we only have tests for react project, we could easily add tests for server and worker
+script:
+  - docker run -e CI=true queengineer/react-test npm run test  ##e Set environment variables and start test
+after_success:
+  - docker build -t queengineer/multi-client ./client
+  - docker build -t queengineer/multi-nginx ./nginx
+  - docker build -t queengineer/multi-server ./server
+  - docker build -t queengineer/multi-worker ./worker
+  #Login to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  #Take those images and push them to docker hub
+  - docker push queengineer/multi-client
+  - docker push queengineer/multi-nginx
+  - docker push queengineer/multi-server
+  - docker push queengineer/multi-worker
