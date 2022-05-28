@@ -2,18 +2,18 @@ sudo: required ##super user permission
 services:
   - docker
 before_install:
-  - docker build -t queengineer/react-test -f ./client/Dockerfile.dev ./client #we only have tests for react project, we could easily add tests for server and worker
+  - docker build -t tgbkrkmz/react-test -f ./client/Dockerfile.dev ./client #we only have tests for react project, we could easily add tests for server and worker
 script:
-  - docker run -e CI=true queengineer/react-test npm run test  ##e Set environment variables and start test
+  - docker run -e CI=true tgbkrkmz/react-test npm run test  ##e Set environment variables and start test
 after_success:
-  - docker build -t queengineer/multi-client ./client
-  - docker build -t queengineer/multi-nginx ./nginx
-  - docker build -t queengineer/multi-server ./server
-  - docker build -t queengineer/multi-worker ./worker
+  - docker build -t tgbkrkmz/multi-client ./client
+  - docker build -t tgbkrkmz/multi-nginx ./nginx
+  - docker build -t tgbkrkmz/multi-server ./server
+  - docker build -t tgbkrkmz/multi-worker ./worker
   #Login to the docker CLI
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   #Take those images and push them to docker hub
-  - docker push queengineer/multi-client
-  - docker push queengineer/multi-nginx
-  - docker push queengineer/multi-server
-  - docker push queengineer/multi-worker
+  - docker push tgbkrkmz/multi-client
+  - docker push tgbkrkmz/multi-nginx
+  - docker push tgbkrkmz/multi-server
+  - docker push tgbkrkmz/multi-worker
