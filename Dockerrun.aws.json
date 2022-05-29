@@ -1,17 +1,19 @@
 {
-    "AWSDockerrunVersion": 2,
+    "AWSEBDockerrunVersion": 2,
     "containerDefinitions":[
       { 
           "name": "client", 
           "image": "tgbkrkmz/multi-client", 
           "hostname": "client",
-          "essential": false
+          "essential": false,
+          "memory": 128
       },
       { 
         "name": "server", 
         "image": "tgbkrkmz/multi-server", 
         "hostname": "api",
-        "essential": false
+        "essential": false,
+        "memory": 128
     
     },
     
@@ -19,7 +21,8 @@
         "name": "worker", 
         "image": "tgbkrkmz/multi-worker", 
         "hostname": "worker",
-        "essential": false
+        "essential": false,
+        "memory": 128
     
     },
     { 
@@ -34,7 +37,8 @@
                 
             }
         ],
-        "links": ["client","server"]
+        "links": ["client","server"],
+        "memory": 128
     
     }
     ]
