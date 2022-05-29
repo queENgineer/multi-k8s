@@ -17,3 +17,14 @@ after_success:
   - docker push tgbkrkmz/multi-nginx
   - docker push tgbkrkmz/multi-server
   - docker push tgbkrkmz/multi-worker
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-1" #http://dockerreact2-env.eba-iuf62dhd.us-east-1.elasticbeanstalk.com/
+  app: "multi-docker2"
+  env: "Multidocker2-env-2"
+  bucket_name: "elasticbeanstalk-us-east-1-000215741983" ## from s3 storage created with ebs on AWS
+  bucket_path: "multi-docker2" # equals to appname
+  on:
+    branch: master ##whoch branch to be deployed
+  access_key_id: $AWS_ACCESS_KEY # from IAM Management console add user and set on travis CI env variables
+  secret_access_key: $AWS_SECRET_KEY # from IAM Management console add user and set on travis CI env variables

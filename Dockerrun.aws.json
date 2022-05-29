@@ -1,0 +1,42 @@
+{
+    "AWSDockerrunVersion": 2,
+    "containerDefinitions":[
+      { 
+          "name": "client", 
+          "image": "tgbkrkmz/multi-client", 
+          "hostname": "client",
+          "essential": false
+      },
+      { 
+        "name": "server", 
+        "image": "tgbkrkmz/multi-server", 
+        "hostname": "api",
+        "essential": false
+    
+    },
+    
+    { 
+        "name": "worker", 
+        "image": "tgbkrkmz/multi-worker", 
+        "hostname": "worker",
+        "essential": false
+    
+    },
+    { 
+        "name": "nginx", 
+        "image": "tgbkrkmz/multi-nginx", 
+        "hostname": "nginx",
+        "essential": true,
+        "portMappings": [
+            {
+                "hostPort":80,
+                "containerPort":80
+                
+            }
+        ],
+        "links": ["client","server"]
+    
+    }
+    ]
+
+}
