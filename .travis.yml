@@ -7,5 +7,4 @@ before_install:
   - source $HOME/google-cloud-sdk/path.bash.inc # there are some configuration taht is going to modify our shell inside of TravisCI inside this file and we are going to apply that additional conf through the source command 
   - gcloud components update kubectl #use updated kubectl to apply all those different conf files
   - gcloud auth activate-service-account --key-file service-account.json #this is who we are and here is our password or whatever it might be, everything that it needs to actually log in and get access to our account
-  - 
   
