@@ -1,10 +1,27 @@
 sudo: required
 services:
   - docker
+env:
+  global:
+    - SHA=$(git rev-parse HEAD) #get current sha
+    - CLOUDSDK_CORE_DISABLE_PROMPTS=1 # to configure the Google Cloud Seelie and make sure that it does not try to display any prompts that require user input.
 before_install:
   - openssl aes-256-cbc -K $encrypted_9f3b5599b056_key -iv $encrypted_9f3b5599b056_iv -in service-account.json.enc -out service-account.json -d
   - curl https://sdk.cloud.google.com | bash > /dev/null; #download google sdk and install it locally on our little instance that is assigned to us by travisCI
   - source $HOME/google-cloud-sdk/path.bash.inc # there are some configuration taht is going to modify our shell inside of TravisCI inside this file and we are going to apply that additional conf through the source command 
   - gcloud components update kubectl #use updated kubectl to apply all those different conf files
   - gcloud auth activate-service-account --key-file service-account.json #this is who we are and here is our password or whatever it might be, everything that it needs to actually log in and get access to our account
+  - gcloud config set project multi-k8s-352707 # from google cloud ID  -Configuring the GCloud CLI on Cloud Console
+  - gcloud config set compute/zone us-central1-c # from google cloud clusters location -Configuring the GCloud CLI on Cloud Console
+  - gcloud container clusters get-credentials multi-cluster # # from google cloud clusters name -Configuring the GCloud CLI on Cloud Console and kubectl create secret generic pgpassword --from-literal PGPASSWORD=postgres_password
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin #add settings on travis
+  - docker build -t tgbkrkmz/react-test -f ./client/Dockerfile.dev ./client 
   
+script:
+  - docker run -e CI=true tgbkrkmz/react-test npm test
+
+deploy:
+  provider: script
+  script: bash ./deploy.sh
+  on:
+    branch: master
