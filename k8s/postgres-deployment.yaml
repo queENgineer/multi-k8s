@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+spec:
+  replicas: 1 #So for whatever whatever reason, you want to scale up your copy of postgres and make it more available 
+#by having more copies of it running or whatever it might be, you have to go through some additional
+#configuration steps besides just incrementing that replicates no right there.we have two pods that might be accessing the same volume, having two different databases,
+#access the same file system without them being aware of each other and have them very distinctly cooperating
+#with each other is a recipe for disaster.
+  selector:
+    matchLabels:
+      component: postgres
+  template: #the selector and the label inside the template is how the deployment is going to identify the different parts that it is suppose to manage.
+    metadata:
+      labels:
+        component: postgres
+    spec:
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: database-persistent-volume-claim
+      containers:
+        - name: postgres
+          image: postgres
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: postgres-storage # it means go back out to the volume century and find some piece of storage that we just asked K8s for.
+              mountPath: /var/lib/postgresql/data #the Mount Path is designating where inside the container this store should be made available. So, in other words,
+              # are going to put in a little folder reference right here.And then anything that the container stores at that folder or inside that directory will be actually 
+              #and stored inside of our volume.
+              subPath: postgres #any data inside the container that is stored inside of Mount Path is going to be stored inside of a folder called Posterous, inside of the actual persistent filing claim.
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword
+                  key: PGPASSWORD
