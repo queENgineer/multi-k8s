@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: tugbakorkmaz-net-tls
+spec:
+  secretName: tugbakorkmaz-net #The secret name right here is specifying where our certificate should be stored after is obtained by search manager.
+  issuerRef:
+    name: letsencrypt-prod #the issuer ref is a reference to the issuer that we set up and want to use in order to obtain the certificate.
+    kind: ClusterIssuer #kind of issuer
+  commonName: tugbakorkmaz.net #just domain name
+  dnsNames: #what we set on https://domains.google.com/ as host names
+    - tugbakorkmaz.net
+    - www.tugbakorkmaz.net

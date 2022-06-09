@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory # essentially a link to the Let's Encrypt API that's going to be used for setting up all this different communication back and forth.
+    email: "korkmaztugbakorkkmaz@gmail.com"
+    privateKeySecretRef:
+      name: letsencrypt-prod #It's this little key that gets sent back to us and stored inside of this secret key ref is not actually something we ever have to use.So essentially we just kind of throw it on here and forget about it.
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
