@@ -11,3 +11,4 @@ spec:
   dnsNames: #what we set on https://domains.google.com/ as host names
     - tugbakorkmaz.net
     - www.tugbakorkmaz.net
+    
